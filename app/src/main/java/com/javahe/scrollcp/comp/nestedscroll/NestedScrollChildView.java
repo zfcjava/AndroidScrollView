@@ -64,7 +64,7 @@ public class NestedScrollChildView extends LinearLayout implements NestedScrolli
                 int y = (int) (event.getRawY());
                 int dy = y - lastY;
                 lastY = y;
-                if (startNestedScroll(ViewCompat.SCROLL_AXIS_HORIZONTAL)
+                if (startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL)
                         && dispatchNestedPreScroll(0, dy, consumed, offset)) //如果找到了支持嵌套滑动的父类,父类进行了一系列的滑动
                 {
                     //获取滑动距离

@@ -2,9 +2,9 @@ package com.javahe.scrollcp.comp.nestedscroll;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
-import android.support.v4.view.NestedScrollingChild;
 import android.support.v4.view.NestedScrollingParentHelper;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
@@ -50,23 +50,29 @@ public class NestedScrollParentView extends LinearLayout implements NestedScroll
         textView = getChildAt(1);
         myNestedScrollChild = (NestedScrollChildView) getChildAt(2);
 
+        imageHeight = imageView.getMeasuredHeight();
+        textViewHeight = textView.getMeasuredHeight();
         imageView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 if (imageHeight < 0) {
                     imageHeight = imageView.getMeasuredHeight();
+                    Log.e("imageHeight", "new2 imageHeight = " + imageHeight);
                 }
             }
         });
+        ;
 
         textView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 if (textViewHeight < 0) {
                     textViewHeight = textView.getMeasuredHeight();
+                    Log.e("textViewHeight", "new2 textViewHeight = " + textViewHeight);
                 }
             }
         });
+        imageView.requestLayout();
     }
 
 
@@ -94,6 +100,7 @@ public class NestedScrollParentView extends LinearLayout implements NestedScroll
     //先于child进行滚动，前3个是入参数，最后一个输出参数
     @Override
     public void onNestedPreScroll(View target, int dx, int dy, int[] consumed) {
+        imageHeight = imageView.getMeasuredHeight();
         if(showImage(dy)||hideImg(dy)){
             scrollBy(0, -dy);
             consumed[1] = dy; //告诉child消耗了多少
@@ -127,6 +134,8 @@ public class NestedScrollParentView extends LinearLayout implements NestedScroll
     //下拉的时候是否要向下滚动以显示图片
     public boolean showImage(int dy) {
         if (dy > 0) {
+            Log.e("getScrollYSh", "new getScrollY = " + getScrollY());
+            Log.e("getScrollYSh", "new imageHeight = " + imageHeight);
             if (getScrollY() > 0 && myNestedScrollChild.getScrollY() == 0) {
                 return true;
             }
@@ -138,6 +147,8 @@ public class NestedScrollParentView extends LinearLayout implements NestedScroll
     //上拉的时候，是否要向上滚动，隐藏图片
     public boolean hideImg(int dy) {
         if (dy < 0) {
+            Log.e("getScrollYHi", "new getScrollY = " + getScrollY());
+            Log.e("getScrollYHi", "new imageHeight = " + imageHeight);
             if (getScrollY() < imageHeight) {
                 return true;
             }
